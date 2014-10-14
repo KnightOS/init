@@ -1,21 +1,11 @@
-OUTDIR:=bin/
-BINDIR:=$(OUTDIR)bin/
-ETCDIR:=$(OUTDIR)etc/
+include .knightos/variables.make
 
-all: init-1.0.0.pkg
+# This is a list of files that need to be added to the filesystem when installing your program
+ALL_TARGETS:=$(BIN)init
 
-init-1.0.0.pkg: $(BINDIR)init
-	kpack init-1.0.0.pkg $(OUTDIR)
+# This is all the make targets to produce said files
+$(BIN)init: main.asm
+	mkdir -p $(BIN)
+	$(AS) $(ASFLAGS) --listing $(OUT)main.list main.asm $(BIN)init
 
-$(BINDIR)init: init.asm
-	mkdir -p $(BINDIR)
-	$(AS) $(ASFLAGS) --define "$(PLATFORM)" --include "$(INCLUDE);$(PACKAGEPATH)/base/" init.asm $(BINDIR)init
-
-clean:
-	rm -rf $(OUTDIR)
-	rm -rf init-*.pkg
-
-install: init-1.0.0.pkg
-	kpack -e -s init-1.0.0.pkg $(PREFIX)
-
-.PHONY: all package clean
+include .knightos/sdk.make
