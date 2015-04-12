@@ -15,6 +15,7 @@ start:
     kld(de, inittab)
     pcall(openFileRead)
     pcall(getStreamInfo)
+    inc bc
     pcall(malloc)
     pcall(streamReadToEnd)
     pcall(closeStream)
